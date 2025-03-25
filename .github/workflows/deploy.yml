@@ -28,12 +28,8 @@ jobs:
             docker pull yaongmeow/skku-gp
             docker stop skku-gp-container || true
             docker rm skku-gp-container || true
-            docker run -e DB_HOST=${{ secrets.DB_HOST }} \
-            -e DB_PORT=${{ secrets.DB_PORT }} \
-            -e DB_USER=${{ secrets.DB_USER }} \
-            -e DB_PASS=${{ secrets.DB_PASS }} \
-            -e DB_NAME=${{ secrets.DB_NAME }} \
-            -e JWT_SECRET_KEY_ACCESS=${{ secrets.JWT_SECRET_KEY_ACCESS }} \
+            docker run -e DB_URL=${{ secrets.DB_URL }} \
+            -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
             -d -p ${{secrets.EXTERNAL_PORT}}:${{secrets.INTERNAL_PORT}} \
             -v /root/logs:/workspace/logs \
             --name skku-gp-container yaongmeow/skku-gp \
