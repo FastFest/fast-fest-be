@@ -1,0 +1,40 @@
+name: CD
+on:
+  push:
+    branches: [develop]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout...
+        uses: actions/checkout@v3
+      - name: Docker Login
+        run: docker login -u ${{ secrets.DOCKER_ID }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build Docker
+        run: |
+          docker build -f Dockerfile -t yaongmeow/skku-gp .
+      - name: Push Docker
+        run: |
+          docker push yaongmeow/skku-gp:latest
+      - name: SSH Login
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          script: |
+            docker login --username ${{ secrets.DOCKER_ID }} --password ${{ secrets.DOCKER_PASSWORD }}
+            docker pull yaongmeow/skku-gp
+            docker stop skku-gp-container || true
+            docker rm skku-gp-container || true
+            docker run -e DB_HOST=${{ secrets.DB_HOST }} \
+            -e DB_PORT=${{ secrets.DB_PORT }} \
+            -e DB_USER=${{ secrets.DB_USER }} \
+            -e DB_PASS=${{ secrets.DB_PASS }} \
+            -e DB_NAME=${{ secrets.DB_NAME }} \
+            -e JWT_SECRET_KEY_ACCESS=${{ secrets.JWT_SECRET_KEY_ACCESS }} \
+            -d -p ${{secrets.EXTERNAL_PORT}}:${{secrets.INTERNAL_PORT}} \
+            -v /root/logs:/workspace/logs \
+            --name skku-gp-container yaongmeow/skku-gp \
+            uvicorn main:app --host=0.0.0.0 --port=${{secrets.INTERNAL_PORT}} --reload
