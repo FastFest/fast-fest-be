@@ -31,6 +31,6 @@ jobs:
             sudo docker run -e DB_URL=${{ secrets.DB_URL }} \
             -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
             -d -p ${{secrets.EXTERNAL_PORT}}:${{secrets.INTERNAL_PORT}} \
-            -v /root/logs:/workspace/logs \
+            -v /home/ubuntu/logs:/workspace/logs \
             --name skku-gp-container yaongmeow/skku-gp \
-            uvicorn main:app --host=0.0.0.0 --port=${{secrets.INTERNAL_PORT}} --reload
+            uvicorn main:app --host=0.0.0.0 --port=${{secrets.INTERNAL_PORT}}

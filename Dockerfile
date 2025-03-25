@@ -10,4 +10,4 @@ RUN mkdir -p /workspace/logs
 
 RUN touch /workspace/logs/log.txt
 
-COPY src .
+COPY src/ .
