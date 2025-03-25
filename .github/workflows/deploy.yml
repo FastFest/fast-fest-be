@@ -12,10 +12,7 @@ jobs:
         run: docker login -u ${{ secrets.DOCKER_ID }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker
         run: |
-          docker build -f Dockerfile -t yaongmeow/skku-gp .
-      - name: Push Docker
-        run: |
-          docker push yaongmeow/skku-gp:latest
+          docker buildx build --platform linux/amd64 -f Dockerfile -t yaongmeow/skku-gp . --push
       - name: SSH Login
         uses: appleboy/ssh-action@master
         with:
