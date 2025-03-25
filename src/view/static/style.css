@@ -1,0 +1,16 @@
+:root {
+    --main-green: #006400; /* 진초록 */
+}
+.bg-main-green {
+    background-color: var(--main-green) !important;
+}
+.text-main-green {
+    color: var(--main-green) !important;
+}
+.btn-main-green {
+    background-color: var(--main-green);
+    color: white;
+}
+.btn-main-green:hover {
+    background-color: #004d00;
+}
