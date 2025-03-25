@@ -24,11 +24,11 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           port: 22
           script: |
-            docker login --username ${{ secrets.DOCKER_ID }} --password ${{ secrets.DOCKER_PASSWORD }}
-            docker pull yaongmeow/skku-gp
-            docker stop skku-gp-container || true
-            docker rm skku-gp-container || true
-            docker run -e DB_URL=${{ secrets.DB_URL }} \
+            sudo docker login --username ${{ secrets.DOCKER_ID }} --password ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker pull yaongmeow/skku-gp
+            sudo docker stop skku-gp-container || true
+            sudo docker rm skku-gp-container || true
+            sudo docker run -e DB_URL=${{ secrets.DB_URL }} \
             -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
             -d -p ${{secrets.EXTERNAL_PORT}}:${{secrets.INTERNAL_PORT}} \
             -v /root/logs:/workspace/logs \
