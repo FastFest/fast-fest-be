@@ -8,14 +8,21 @@
     <title>qna</title>
 </head>
 <body>
+<div class="bg-main-green text-white py-2 text-center">
+  <h4 class="m-0">FastFest</h4>
+</div>
 <div class="container py-4" id="qna-view">
   <h2 class="text-center text-main-green mb-4">QnA 게시판</h2>
-  <div class="mb-3">
-    <button class="btn btn-secondary" onclick="showView('home-view')">← 홈으로</button>
-  </div>
+    <div class="mb-3 d-flex justify-content-between">
+      <a href="/" class="btn btn-sm btn-main-green">홈으로</a>
+      <a href="/qna/write" class="btn btn-sm btn-main-green">질문 쓰기</a>
+    </div>
   <div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action">Q1. 프론트는 왜 이렇게 어려울까요?</a>
-    <a href="#" class="list-group-item list-group-item-action">Q2. Redis pub/sub은 어떻게 쓰나요?</a>
+  {% for q in questions %}
+      <a href="/qna/{{ q.id }}" class="list-group-item list-group-item-action">
+        Q{{ loop.index }}. {{ q.title }}
+      </a>
+  {% endfor %}
   </div>
 </div>
 </body>

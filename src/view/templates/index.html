@@ -22,7 +22,7 @@
 <!-- 공지사항 배너 -->
 <div class="container mt-3">
     <div class="alert alert-info text-center mb-0">
-        현재 공지사항이 없습니다.
+        [공지] 소프트웨어학과 축제 부스 위치가 기존 위치의 맞은편으로 변경되었습니다.
     </div>
 </div>
 
@@ -31,12 +31,29 @@
     <!-- QnA 게시판 최신글 -->
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h5 class="text-main-green mb-0">QnA 최신 글</h5>
-        <button class="btn btn-sm btn-main-green" onclick="showView('qna-view')">바로가기</button>
+        <a href="/qna" class="btn btn-sm btn-main-green">바로가기</a>
     </div>
     <ul class="list-group mb-3">
-        <li class="list-group-item">Q1. 프론트는 왜 이렇게 어려울까요?</li>
-        <li class="list-group-item">Q2. Redis pub/sub은 어떻게 쓰나요?</li>
-        <li class="list-group-item">Q3. FastAPI 비동기 처리 궁금해요</li>
+    {% for q in questions[:3] %}
+        <li class="list-group-item">
+            <a href="/qna/{{ q.id }}" class="text-decoration-none text-dark">
+                Q{{ loop.index }}. {{ q.title }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="text-main-green mb-0">판매중인 티켓</h5>
+        <a href="/ticket" class="btn btn-sm btn-main-green">바로가기</a>
+    </div>
+    <ul class="list-group mb-3">
+    {% for t in tickets[:3] %}
+        <li class="list-group-item">
+            <a href="/ticket/{{ t.id }}" class="text-decoration-none text-dark">
+                {{ t.title }} - 수량 {{t.left_quantity}} / {{t.quantity}}
+            </a>
+        </li>
+    {% endfor %}
     </ul>
 </div>
 </body>

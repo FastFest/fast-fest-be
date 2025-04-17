@@ -3,7 +3,7 @@ from sqlalchemy import select
 from starlette import status
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
-from starlette.responses import Response, RedirectResponse
+from starlette.responses import Response, RedirectResponse, JSONResponse
 
 from models import User
 from template import templates
@@ -44,6 +44,13 @@ def login(request: Request, response: Response, user_in: UserLogin):
         raise HTTPException(status_code=401, detail="User not found")
     if user_in.password != user.password:
         raise HTTPException(status_code=401, detail="Incorrect password")
-    response.set_cookie("access_token", access_token_gen(user.id))  # ✅ 쿠키 설정 예시
-    response.status_code = status.HTTP_200_OK
-    return response
+
+    # 쿠키 설정
+    response.set_cookie("access_token", access_token_gen(user.id))
+
+    # 응답 본문 추가
+    return JSONResponse(
+        content={"message": "Login success"},
+        status_code=status.HTTP_200_OK,
+        headers=response.headers  # 쿠키 포함
+    )
