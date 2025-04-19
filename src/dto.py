@@ -86,9 +86,25 @@ class TicketInfoCreate(BaseModel):
 class TicketRead(BaseModel):
     id: int
     ticket_id: int
-    tocket_number: int
+    ticket_number: int
     user_id: int
     pay: bool
+    title: Optional[str] = None
+    price: Optional[int] = None
+
+    class Config:
+        orm_mode = True
+        from_attributes = True
+
+
+class TicketDetailRead(BaseModel):
+    id: int
+    ticket_id: int
+    ticket_number: int
+    user_id: int
+    pay: bool
+    name: Optional[str] = None
+    student_id: Optional[int] = None
 
     class Config:
         orm_mode = True

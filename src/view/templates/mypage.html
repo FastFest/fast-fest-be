@@ -1,17 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../static/style.css" rel="stylesheet">
-    <title>mypage</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/style.css" rel="stylesheet">
+  <title>마이페이지</title>
 </head>
 <body>
-<div class="container py-4" id="mypage-view">
-    <h2 class="text-center text-main-green mb-4">마이페이지</h2>
-    <p>사용자 정보 표시 예정</p>
-    <button class="btn btn-secondary" onclick="showView('home-view')">← 홈으로</button>
+<!-- 상단 서비스명 -->
+<div class="bg-main-green text-white py-2 text-center">
+  <h4 class="m-0">FastFest</h4>
+</div>
+
+<!-- 상단 버튼 라인 -->
+<div class="container mt-2 d-flex justify-content-between">
+  <a href="/" class="btn btn-sm btn-outline-secondary">홈으로</a>
+  <a href="/logout" class="btn btn-sm btn-outline-danger">로그아웃</a>
+</div>
+
+<!-- 마이페이지 본문 -->
+<div class="container py-4">
+  <h2 class="text-center text-main-green mb-4">마이페이지</h2>
+
+  <!-- 사용자 정보 -->
+  <div class="mb-4">
+    <p><strong>이름:</strong> {{ user.name }}</p>
+    <p><strong>학번:</strong> {{ user.student_id }}</p>
+  </div>
+
+  <!-- 예매한 티켓 -->
+  <h5 class="text-main-green mb-3">예매한 티켓 목록</h5>
+  {% if tickets %}
+    <ul class="list-group">
+      {% for t in tickets %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ t.title }}</strong><br>
+          티켓 번호: {{ t.ticket_number }} / 결제 상태:
+          {% if t.pay %}<span class="text-success">결제 완료</span>
+          {% else %}<span class="text-danger">미결제</span>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">예매한 티켓이 없습니다.</p>
+  {% endif %}
 </div>
 </body>
 </html>

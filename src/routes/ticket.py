@@ -1,12 +1,14 @@
+from urllib import response
+
 from fastapi import APIRouter
 from sqlalchemy import select, update
 from starlette import status
 from starlette.requests import Request
 from starlette.responses import Response
 
-from dto import TicketInfoRead, TicketInfoCreate
+from dto import TicketInfoRead, TicketInfoCreate, TicketDetailRead, UserRead
 from enums import UserRole
-from models import Ticket, TicketInfo
+from models import Ticket, TicketInfo, User
 from template import templates
 
 ticket_router = APIRouter(
@@ -44,6 +46,32 @@ async def create_ticket(request: Request, response: Response, ticket_info_in: Ti
     session.commit()
     response.status_code = status.HTTP_201_CREATED
     return response
+
+@ticket_router.get("/{ticket_id}/applicants")
+async def ticket_applicants(request: Request, ticket_id: int):
+    session = request.state.db_session
+    result = session.execute(select(TicketInfo).where(TicketInfo.id == ticket_id))
+    ticket_info = TicketInfoRead.from_orm(result.scalars().one_or_none())
+    ticket_title = ticket_info.title
+    result = session.execute(select(Ticket).where(Ticket.ticket_id == ticket_id))
+    tickets = [TicketDetailRead.from_orm(t) for t in result.scalars().all()]
+    result = session.execute(select(User).where(User.id.in_([t.user_id for t in tickets])))
+    users = [UserRead.from_orm(u) for u in result.scalars().all()]
+    for t in tickets:
+        for u in users:
+            if u.id == t.user_id:
+                t.name = u.name
+                t.student_id = u.student_id
+    return templates.TemplateResponse("ticket_detail.html", {"request": request, "ticket_title": ticket_title, "applicants": tickets})
+
+@ticket_router.put("/{ticket_id}/confirm")
+async def confirm_ticket(request: Request, response: Response, ticket_id: int):
+    session = request.state.db_session
+    session.execute(update(Ticket).where(Ticket.ticket_id == ticket_id).values(pay=True))
+    session.commit()
+    response.status_code = status.HTTP_200_OK
+    return response
+
 
 
 @ticket_router.post("/{ticket_id}")

@@ -11,6 +11,7 @@ from middleware.auth_middleware import AuthCheckMiddleware
 from middleware.db_middleware import DBSessionMiddleware
 from models import Question, Ticket, TicketInfo
 from routes.auth import auth_router
+from routes.mypage import mypage_router
 from routes.qna import qna_router
 from routes.ticket import ticket_router
 from template import templates
@@ -34,6 +35,7 @@ app.add_middleware(DBSessionMiddleware)
 app.include_router(auth_router, prefix="/auth")
 app.include_router(qna_router, prefix="/qna")
 app.include_router(ticket_router, prefix="/ticket")
+app.include_router(mypage_router, prefix="/mypage")
 
 
 @app.get("/")
